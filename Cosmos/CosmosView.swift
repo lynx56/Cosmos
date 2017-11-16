@@ -116,6 +116,10 @@ Shows: ★★★★☆ (123)
       layers = addTextLayer(textLayer: textLayer, layers: layers)
     }
     
+    let numbers = createNumbersForTextLayers(layers: layers)
+    layers = addNumbersTextLayers(textLayer: numbers, layers: layers)
+    
+    
     layer.sublayers = layers
     
     
@@ -130,6 +134,33 @@ Shows: ★★★★☆ (123)
     updateAccessibility()
   }
   
+    private func createNumbersForTextLayers(layers: [CALayer])->CALayer{
+        let starsSize = CosmosSize.calculateSizeToFitLayers(layers)
+        let starWidth = (starsSize.width - CGFloat(Double(totalStars - 1)*starMargin))/CGFloat(totalStars)
+        
+        let textsLayers = CALayer()
+        
+        for i in 1...10{
+            let textLayer = CosmosLayerHelper.createTextLayer("\(i)", font: settings.textFont, color: settings.textColor)
+            
+            textLayer.position.x = (starWidth + CGFloat(starMargin))*CGFloat(i-1) + (starWidth - textLayer.bounds.width)/2.0
+            textLayer.position.y = (starsSize.height - textLayer.bounds.height) / 2
+            
+            textsLayers.addSublayer(textLayer)
+        }
+        
+        layer.addSublayer(textsLayers)
+        
+        return textsLayers
+    }
+    //todo: for left to right
+    private func addNumbersTextLayers(textLayer: CALayer, layers: [CALayer]) -> [CALayer] {
+        var allLayers = layers
+        allLayers.append(textLayer)
+        
+        return allLayers
+    }
+    
   /**
   
   Creates the text layer for the given text string.
